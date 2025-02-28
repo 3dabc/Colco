@@ -54,6 +54,8 @@ export default function Home() {
 
   const [userIdToUpdate, setUserIdToUpdate] = useState('');
   const [eventIdToUpdate, setEventIdToUpdate] = useState('');
+  const [openUserDialog, setOpenUserDialog] = useState(false);
+  const [openEventDialog, setOpenEventDialog] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -119,6 +121,36 @@ export default function Home() {
     setTitle('');
     fetchEventData();
   };
+// 
+// 
+// 
+//   
+  const handleOpenUserDialog = (e) => {
+    setUserIdToUpdate(e.id);
+    setFName(e.FirstName);
+    setLName(e.LastName);
+    setUserEmail(e.Email);
+    setPword(e.Password);
+    setOpenUserDialog(true);
+  };
+
+  const handleCloseUserDialog = () => {
+    setOpenUserDialog(false);
+  };
+
+  const handleOpenEventDialog = (e) => {
+    setEventIdToUpdate(e.id);
+    setTitle(e.Title);
+    setMetric(e.Metric);
+    setDataType(e.Type);
+    setLThresh(e.LowerThresh);
+    setHThresh(e.UpperThresh);
+    setOpenEventDialog(true);
+  };
+
+  const handleCloseEventDialog = () => {
+    setOpenEventDialog(false);
+  };
 
   const updateUser = async () => {
     if (!userIdToUpdate) return;
@@ -128,6 +160,7 @@ export default function Home() {
       Email: userEmail,
       Password: Pword,
     });
+    setOpenUserDialog(false);
     setUserIdToUpdate('');
     setFName('');
     setLName('');
@@ -136,8 +169,10 @@ export default function Home() {
     fetchUserData();
   };
 
-  const deletUser = async () => {
-    await deleteDoc(doc(db, 'User', id));
+  const deleteUser = async () => {
+    if (!userIdToUpdate) return;
+    await deleteDoc(doc(db, 'User', userIdToUpdate));
+    setUserIdToUpdate('');
     fetchUserData();
   };
 
@@ -150,6 +185,7 @@ export default function Home() {
       LowerThresh: LThresh,
       UpperThresh: HThresh,
     });
+    setOpenEventDialog(false);
     setEventIdToUpdate('');
     setTitle('');
     setMetric('');
@@ -159,8 +195,10 @@ export default function Home() {
     fetchEventData();
   };
 
-  const deleteEvent = async (id) => {
-    await deleteDoc(doc(db, 'Event', id));
+  const deleteEvent = async () => {
+    if(!eventIdToUpdate) return;
+    await deleteDoc(doc(db, 'Event', eventIdToUpdate));
+    setEventIdToUpdate('');
     fetchEventData();
   };
 
@@ -185,13 +223,14 @@ export default function Home() {
           <Grid container spacing={2} sx={{mb:4}}>
             {users.map((u) => (
               <Grid item key={u.id}>
-                <Box border={1} borderRadius={2} p={2}>
+                <Box border={1} borderRadius={2} p={2} sx={{cursor: 'pointer'}} onClick={()=> handleOpenUserDialog(u)}>
                   <Typography variant="h5">{u.FirstName} {u.LastName}</Typography>
                   <Typography variant="h6">Email: {u.Email}</Typography>
                   <Typography variant="h6">Password: {u.Password}</Typography>
                 </Box>
               </Grid>
             ))}
+            <Button variant="contained" color="error" onClick={deleteUser} disabled={!userIdToUpdate}>Delete Selected User</Button>
           </Grid>
           <Paper sx={{p:2, mb:4, width:'100%'}}>
               <Typography variant="h5">Create New Event</Typography>
@@ -206,7 +245,7 @@ export default function Home() {
           <Grid container spacing={2} sx={{mb:4}}>
             {events.map((u) => (
               <Grid item key={u.id}>
-                <Box border={1} borderRadius={2} p={2}>
+                <Box border={1} borderRadius={2} p={2} sx={{ cursor: 'pointer'}} onClick={() => handleOpenEventDialog(u)}>
                 <Typography variant="h5">Title: {u.Title}</Typography>
                   <Typography variant="h6">Metric: {u.Metric}</Typography>
                   <Typography variant="h6">Type: {u.Type}</Typography>
@@ -214,9 +253,56 @@ export default function Home() {
                 </Box>
               </Grid>
             ))}
+            <Button variant="contained" color="error" onClick={deleteEvent} disabled={!eventIdToUpdate}>Delete Selected Event</Button>
           </Grid>
       </Box>
       {/* <Typography variant="h5">Hello World!</Typography> */}
+      <Dialog open={openUserDialog} onClose={handleCloseUserDialog}>
+            <DialogTitle>Update User</DialogTitle>
+            <DialogContent>
+              <TextField
+                label='First Name' fullWidth variant="outlined" value={FName} onChange={(e)=> setFName(e.target.value)} sx={{mb:2}}
+              />
+              <TextField
+                label='Last Name' fullWidth variant="outlined" value={LName} onChange={(e)=> setLName(e.target.value)} sx={{mb:2}}
+              />
+              <TextField
+                label='Email' fullWidth variant="outlined" value={userEmail} onChange={(e)=> setUserEmail(e.target.value)} sx={{mb:2}}
+              />
+              <TextField
+                label='Password' fullWidth variant="outlined" value={Pword} onChange={(e)=> setPword(e.target.value)} sx={{mb:2}}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseUserDialog}>Cancel</Button>
+              <Button onClick={updateUser}>Save</Button>
+            </DialogActions>
+      </Dialog>
+
+      <Dialog open={openEventDialog} onClose={handleCloseEventDialog}>
+        <DialogTitle>Update Event</DialogTitle>
+        <DialogContent>
+          <TextField
+            label='Title' fullWidth variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} sx={{mb:2}}
+          />
+          <TextField
+            label='Metric' fullWidth variant="outlined" value={metric} onChange={(e) => setMetric(e.target.value)} sx={{mb:2}}
+          />
+          <TextField
+            label='Data Type' fullWidth variant="outlined" value={dataType} onChange={(e) => setDataType(e.target.value)} sx={{mb:2}}
+          />
+          <TextField
+            label='Lower Threshold' fullWidth variant="outlined" value={LThresh} onChange={(e) => setLThresh(e.target.value)} sx={{mb:2}}
+          />
+          <TextField
+            label='Uper Threswold' fullWidth variant="outlined" value={HThresh} onChange={(e) => setHThresh(e.target.value)} sx={{mb:2}}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEventDialog}>Cancel</Button>
+          <Button onClick={updateEvent}>Save</Button>
+        </DialogActions>
+      </Dialog>
     </Container>
 
   );
