@@ -1,7 +1,7 @@
 from flask import Flask
 from endpoints.auth import auth_bp
 from endpoints.sensor_data import sensor_data_bp
-from endpoints.geo_data import geo_data_bp
+from endpoints.gps_data import geo_data_bp
 
 app = Flask(__name__)
 

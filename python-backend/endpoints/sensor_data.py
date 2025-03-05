@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from .firebase_config import auth
+from firebase_admin import auth
 
 sensor_data_bp = Blueprint('sensor_data', __name__)
 

@@ -1,3 +1,4 @@
 node_modules
 .env
-flaskenv
+venv
+secret-key.json

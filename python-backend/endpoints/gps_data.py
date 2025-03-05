@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, request
-from firebase_config import auth
 import requests
 import os
 from dotenv import load_dotenv
-
+from firebase_admin import auth
+from firebase_config import db
+    
 load_dotenv()
 
 geo_data_bp = Blueprint('geo_data', __name__)
