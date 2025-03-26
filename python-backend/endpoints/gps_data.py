@@ -16,7 +16,7 @@ def get_geo_data():
         auth.get_account_info(token)
         
         # Need to use exact coordinates for where farm is
-        # Probabily will make this a field on the front end
+        # Probabily will make this automatic using the onboard GPS or via google geolocation API
         latitude = 34.0522
         longitude = -118.2437
 

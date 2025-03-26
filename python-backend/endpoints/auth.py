@@ -1,10 +1,14 @@
 from flask import Blueprint, jsonify, request
+from flask_cors import cross_origin
 import pyrebase
 import os
 from dotenv import load_dotenv
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
+logging.basicConfig(level=logging.DEBUG)
+
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -23,13 +27,24 @@ firebase_config = {
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
 
-# Route for Firebase authentication
-@auth_bp.route('/login', methods=['POST'])
-def login():
-    email = request.json.get('email')
+# FireAuth Routes
+    
+@auth_bp.route('api/v1/account/<user_id>/update-password', methods=['POST'])
+@cross_origin()
+def update_password():
+    user_id = request.view_args['user_id']
     password = request.json.get('password')
     try:
-        user = auth.sign_in_with_email_and_password(email, password)
-        return jsonify({"token": user['idToken']}), 200
+        auth.update_user(user_id, password=password)
+        return jsonify({"message": "Password updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 401
+    
+@auth_bp.route('api/v1/account/<user_id>/delete', methods=['POST'])
+def delete():
+    user_id = request.view_args['user_id']
+    try:
+        auth.delete_user(user_id)
+        return jsonify({"message": "User deleted successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 401
