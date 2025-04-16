@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import os
 
-service_account_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+service_account_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', 'python-backend\secret-key.json')
 
 if not service_account_path:
     raise ValueError('No service account provided')
