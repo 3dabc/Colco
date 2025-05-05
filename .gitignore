@@ -3,3 +3,5 @@ node_modules
 venv
 secret-key.json
 brangel.pem
+*.pem
+*.pem
