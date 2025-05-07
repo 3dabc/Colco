@@ -1,2 +1,4 @@
 node_modules
 .env
+python-backend/brangel.pem
+python-backend/secret-key.json
