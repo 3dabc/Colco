@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"name": "colco-node",
+			"path": "../../../../PlatformIO/Projects/colco-node"
+		}
+	],
+	"settings": {}
+}
