@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from firebase_admin import auth
-from firebase_config import db  # Ensure firebase_config.py initializes Firestore
+from firebase_config import db 
 import logging
 
 sensor_data_bp = Blueprint('sensor_data', __name__)
@@ -34,7 +34,7 @@ def get_sensor_data(user_id):
 
         # Extract data
         sensor_data_list = [doc.to_dict() for doc in docs]
-        logging.info(f"Fetched data: {sensor_data_list}")
+        logging.info(f"Fetched {len(sensor_data_list)} documents for node_id: {node_id}")
 
         if not sensor_data_list:
             return jsonify({"message": "No sensor data found for this user"}), 404

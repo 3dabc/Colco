@@ -5,16 +5,10 @@ from endpoints.sensor_data import sensor_data_bp
 from endpoints.gps_data import geo_data_bp
 
 from dotenv import load_dotenv
-import os
-import json
 
 load_dotenv
-with open('secret-key.json') as f:
-    secret_key= json.load(f)['SECRET_KEY']
     
 app = Flask(__name__)
-
-app.config['SECRET_KEY'] = secret_key
 
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 CORS(app)
